@@ -8,9 +8,9 @@ const port = process.env.PORT || 3000;
 const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-app.get('*/bundle.js', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './public/bundle.js'));
-});
+// app.get('*/bundle.js', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './public/bundle.js'));
+// });
 
 app.use('/*', express.static('public'));
 
