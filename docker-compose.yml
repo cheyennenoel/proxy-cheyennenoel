@@ -1,33 +1,54 @@
 version: '3'
 
 services:
-  photos:
-    build: photos_server/
+  suggestions-server:
+    image: hanjoon3/similar-products_similarproducts:latest
     depends_on:
-      - 'database'
-    ports: 
-      - '3002:3002'
-
-  description:
-    build: description_server/
-    depends_on:
-      - 'database'
-    ports:
-      - '3003:3003'
-
-  suggestions:
-    build: suggestions_server/
-    depends_on:
-      - 'database'
+      - 'suggestions-database'
     ports:
       - '3001:3001'
 
-    suggestions:
-    build: reviews_server/
+  suggestions-database:
+    image: hanjoon3/similar-products_database:database
+
+  photo-server:
+    image: slowmike/photo_gallery_server_v1:latest
     depends_on:
-      - 'database'
+      - 'photo-database'
+    ports: 
+      - '3002:3002'
+
+  photo-database:
+    image: slowmike/photo_gallery_db_v1:latest
+
+  description-server:
+    image: tonykijak/viamis:v0.1
+    depends_on:
+      - 'description-database'
+    ports:
+      - '3003:3003'
+
+  description-database:
+    image: tonykijak/viamis:db_v0.1
+
+  review-server:
+    image: cheyennenoel/review-server:latest
+    depends_on:
+      - 'review-database'
     ports:
       - '3004:3004'
 
-  database:
-    image: mysql:latest
+  review-database:
+    image: cheyennenoel/review-database:latest
+
+  proxy-server:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    depends_on:
+      - 'suggestions-server'
+      - 'photo-server'
+      - 'description-server'
+      - 'review-server'
+    ports:
+      - '3000:3000'
